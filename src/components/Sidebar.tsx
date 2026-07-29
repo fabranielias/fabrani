@@ -13,6 +13,7 @@ import {
   LayoutDashboard,
   Scale,
   Settings,
+  Sparkles,
   Users,
   type LucideIcon,
 } from "lucide-react";
@@ -31,6 +32,7 @@ const ICONES: Record<string, LucideIcon> = {
   FolderOpen,
   BookMarked,
   Settings,
+  Sparkles,
 };
 
 export function Sidebar() {

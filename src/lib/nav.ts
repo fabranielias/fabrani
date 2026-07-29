@@ -8,6 +8,11 @@ export const MENU: GrupoMenu[] = [
     itens: [{ rotulo: "Visão executiva", href: "/painel" }],
   },
   {
+    rotulo: "Sócrates",
+    icone: "Sparkles",
+    itens: [{ rotulo: "Agente regulatório", href: "/painel/socrates" }],
+  },
+  {
     rotulo: "Avaliação SINAES",
     icone: "Gauge",
     itens: [

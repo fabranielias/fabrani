@@ -1,0 +1,69 @@
+{
+  "observacao": "Corpus normativo inicial do Sócrates. Cada dispositivo traz uma SÍNTESE fiel do conteúdo, não a transcrição literal — o texto verbatim deve ser colado a partir da fonte oficial indicada em url_dou antes de usar o dispositivo como citação em documento oficial. O campo natureza registra essa distinção.",
+  "dispositivos": [
+    {
+      "norma": { "especie": "LEI", "orgao": "Congresso Nacional", "numero": "10.861", "ano": 2004 },
+      "itens": [
+        { "rotulo": "Art. 3º", "natureza": "SINTESE", "texto": "A avaliação institucional considera dez dimensões: missão e PDI; políticas de ensino, pesquisa, pós-graduação e extensão; responsabilidade social; comunicação com a sociedade; políticas de pessoal; organização e gestão; infraestrutura; planejamento e avaliação (incluindo a autoavaliação da CPA); políticas de atendimento aos estudantes; e sustentabilidade financeira." },
+        { "rotulo": "Art. 11", "natureza": "SINTESE", "texto": "Toda instituição deve constituir Comissão Própria de Avaliação (CPA), com atuação autônoma, responsável pela condução dos processos internos de avaliação, pela sistematização e pela prestação das informações solicitadas pelo INEP, assegurada a participação de todos os segmentos da comunidade acadêmica e da sociedade civil organizada, vedada a composição com maioria absoluta de um único segmento." }
+      ]
+    },
+    {
+      "norma": { "especie": "DECRETO", "orgao": "Presidência da República", "numero": "9.235", "ano": 2017 },
+      "itens": [
+        { "rotulo": "Art. 21", "natureza": "SINTESE", "texto": "O pedido de credenciamento é instruído com o Plano de Desenvolvimento Institucional (PDI), o regimento ou estatuto e os documentos de comprovação da mantenedora, entre outros elementos exigidos em ato do Ministro de Estado da Educação." },
+        { "rotulo": "Art. 41", "natureza": "SINTESE", "texto": "O reconhecimento de curso deve ser solicitado quando o curso tiver completado entre cinquenta por cento e setenta e cinco por cento de sua carga horária, e a renovação de reconhecimento acompanha o ciclo avaliativo do SINAES." }
+      ]
+    },
+    {
+      "norma": { "especie": "DECRETO", "orgao": "Presidência da República", "numero": "12.456", "ano": 2025 },
+      "itens": [
+        { "rotulo": "Formatos de oferta", "natureza": "SINTESE", "texto": "A educação superior passa a admitir os formatos presencial, semipresencial e a distância, com percentuais próprios de carga horária a distância e exigências de atividades presenciais obrigatórias, avaliação presencial e mediação por docentes." },
+        { "rotulo": "Polos", "natureza": "SINTESE", "texto": "Os polos de educação a distância devem dispor de infraestrutura física e tecnológica mínima, acervo, laboratórios quando exigidos pelo curso e responsável de polo formalmente designado, sujeitos a avaliação e supervisão." }
+      ]
+    },
+    {
+      "norma": { "especie": "PORTARIA", "orgao": "MEC", "numero": "506", "ano": 2025 },
+      "itens": [
+        { "rotulo": "Corpo docente e mediação", "natureza": "SINTESE", "texto": "A mediação pedagógica em cursos a distância é atribuição de docentes e de mediadores pedagógicos com formação compatível, vedada a substituição da atuação docente por tutoria sem qualificação correspondente à área do componente curricular." },
+        { "rotulo": "Responsável de polo", "natureza": "SINTESE", "texto": "Cada polo deve ter responsável designado por ato da IES, com atribuições de gestão acadêmica e administrativa registradas e informadas no e-MEC." }
+      ]
+    },
+    {
+      "norma": { "especie": "PORTARIA_NORMATIVA", "orgao": "MEC", "numero": "23", "ano": 2017 },
+      "itens": [
+        { "rotulo": "Fluxo processual", "natureza": "SINTESE", "texto": "Os processos regulatórios seguem as fases de protocolo, análise documental, avaliação in loco pelo INEP, parecer da Secretaria competente, manifestação do CNE quando cabível e ato autorizativo, admitida a impugnação do relatório de avaliação em fase própria." }
+      ]
+    },
+    {
+      "norma": { "especie": "PORTARIA_NORMATIVA", "orgao": "MEC", "numero": "840", "ano": 2018 },
+      "itens": [
+        { "rotulo": "Enade — componente curricular", "natureza": "SINTESE", "texto": "O Enade é componente curricular obrigatório; a instituição deve inscrever os estudantes habilitados nos prazos do edital, e a situação irregular do estudante impede a colação de grau e a expedição do diploma." }
+      ]
+    },
+    {
+      "norma": { "especie": "PORTARIA", "orgao": "MEC", "numero": "315", "ano": 2018 },
+      "itens": [
+        { "rotulo": "Acervo acadêmico digital", "natureza": "SINTESE", "texto": "O acervo acadêmico deve ser mantido em meio digital, com padrões de integridade, autenticidade, rastreabilidade e preservação, admitida a assinatura digital em conformidade com a ICP-Brasil." }
+      ]
+    },
+    {
+      "norma": { "especie": "RESOLUCAO", "orgao": "CNE/CES", "numero": "7", "ano": 2018 },
+      "itens": [
+        { "rotulo": "Curricularização da extensão", "natureza": "SINTESE", "texto": "As atividades de extensão devem compor, no mínimo, dez por cento da carga horária total dos cursos de graduação, integradas à matriz curricular e registradas no projeto pedagógico." }
+      ]
+    },
+    {
+      "norma": { "especie": "PORTARIA_NORMATIVA", "orgao": "INEP", "numero": "359", "ano": 2025 },
+      "itens": [
+        { "rotulo": "Habilitação de estudantes", "natureza": "SINTESE", "texto": "São habilitados como concluintes os estudantes que tenham integralizado o percentual mínimo de carga horária definido para a sua modalidade e, como ingressantes, os que estejam no intervalo inicial do curso, conforme o edital da edição." }
+      ]
+    },
+    {
+      "norma": { "especie": "PORTARIA", "orgao": "INEP", "numero": "771", "ano": 2025 },
+      "itens": [
+        { "rotulo": "Censo — fechamento", "natureza": "SINTESE", "texto": "A instituição que não concluir o preenchimento e o fechamento dos módulos do Censo da Educação Superior no prazo fica sujeita às medidas previstas na legislação, inclusive à inativação no cadastro, com publicação no Diário Oficial da União." }
+      ]
+    }
+  ]
+}

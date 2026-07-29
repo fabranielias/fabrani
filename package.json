@@ -10,7 +10,9 @@
     "typecheck": "tsc --noEmit",
     "db:migrate": "tsx scripts/migrate.ts",
     "db:seed": "tsx scripts/seed.ts",
-    "db:validar": "tsx scripts/validar-registry.ts"
+    "db:seed:socrates": "tsx scripts/seed-socrates.ts",
+    "db:validar": "tsx scripts/validar-registry.ts",
+    "socrates:regras": "tsx scripts/socrates-regras.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.109.0",

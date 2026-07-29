@@ -3,7 +3,10 @@ import { notFound } from "next/navigation";
 import { Badge, Card, CardTitulo, TituloPagina } from "@/components/ui";
 import { FormularioIndicador } from "./FormularioIndicador";
 import { VincularEvidencia } from "./VincularEvidencia";
+import { PainelSocrates } from "./PainelSocrates";
 import { query, queryOne } from "@/lib/db";
+import { regrasDoAlvo } from "@/lib/socrates/regras";
+import { baseLegalDoIndicador } from "@/lib/socrates/corpus";
 import { formatarData } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -82,6 +85,9 @@ export default async function IndicadorPage({
     "select id, titulo from documento order by titulo limit 500",
   );
 
+  const alertas = await regrasDoAlvo("INDICADOR", avaliacaoId);
+  const baseLegal = await baseLegalDoIndicador(av.indicador_id, av.titulo);
+
   return (
     <>
       <TituloPagina
@@ -105,11 +111,53 @@ export default async function IndicadorPage({
         </p>
       ) : null}
 
-      <div className="grid gap-4 lg:grid-cols-5">
-        <Card className="lg:col-span-3">
-          <CardTitulo titulo="Lançamento da autoavaliação" />
-          <FormularioIndicador avaliacao={av} />
+      {alertas.length > 0 ? (
+        <Card className="mb-4 border-amber-200 bg-amber-50/50">
+          <CardTitulo titulo="Sócrates aponta" descricao="Verificação determinística, sem consumo de token." />
+          <ul className="space-y-1.5 text-xs">
+            {alertas.map((a) => (
+              <li key={a.regra} className="flex items-start gap-2">
+                <Badge tom={a.severidade === "RISCO" ? "risco" : "atencao"}>{a.severidade}</Badge>
+                <span className="text-slate-700">
+                  <strong className="font-medium text-slate-900">{a.titulo}.</strong> {a.mensagem}
+                </span>
+              </li>
+            ))}
+          </ul>
         </Card>
+      ) : null}
+
+      <div className="grid gap-4 lg:grid-cols-5">
+        <div className="grid gap-4 lg:col-span-3">
+          <Card>
+            <CardTitulo titulo="Lançamento da autoavaliação" />
+            <FormularioIndicador avaliacao={av} />
+          </Card>
+
+          <Card>
+            <CardTitulo
+              titulo="Sócrates"
+              descricao="Análise como banca avaliadora, com redação pronta para revisão. Consome tokens apenas quando solicitado."
+            />
+            <PainelSocrates avaliacaoId={avaliacaoId} />
+          </Card>
+
+          {baseLegal.length > 0 ? (
+            <Card>
+              <CardTitulo titulo="Base normativa do indicador" />
+              <ul className="space-y-2 text-xs leading-relaxed text-slate-700">
+                {baseLegal.map((d) => (
+                  <li key={d.id}>
+                    <span className="font-medium text-slate-900">
+                      {d.norma}, {d.rotulo}
+                    </span>
+                    <p className="text-slate-600">{d.texto}</p>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          ) : null}
+        </div>
 
         <div className="grid gap-4 lg:col-span-2">
           <Card>

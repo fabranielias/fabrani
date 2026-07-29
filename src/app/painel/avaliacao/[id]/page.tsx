@@ -4,6 +4,7 @@ import { Badge, Barra, Card, CardTitulo, Celula, Metrica, Tabela, TituloPagina }
 import { query } from "@/lib/db";
 import { resumoCiclo } from "@/lib/avaliacao";
 import { formatarConceito, rotularEnum } from "@/lib/utils";
+import { parecerBancaAction } from "@/app/painel/socrates/acoes";
 
 export const dynamic = "force-dynamic";
 
@@ -45,12 +46,20 @@ export default async function CicloPage({ params }: { params: Promise<{ id: stri
         titulo={resumo.ciclo.titulo}
         descricao={`${resumo.ciclo.instrumento_titulo} · ${rotularEnum(resumo.ciclo.finalidade)} · ${resumo.ciclo.ano_referencia}`}
         acao={
-          <Link
-            href={`/painel/avaliacao/${id}/requisitos-legais`}
-            className="rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
-          >
-            Requisitos legais
-          </Link>
+          <div className="flex gap-2">
+            <form action={parecerBancaAction}>
+              <input type="hidden" name="ciclo_id" value={id} />
+              <button className="rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50">
+                Parecer de banca (Sócrates)
+              </button>
+            </form>
+            <Link
+              href={`/painel/avaliacao/${id}/requisitos-legais`}
+              className="rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+            >
+              Requisitos legais
+            </Link>
+          </div>
         }
       />
 

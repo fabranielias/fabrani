@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { sairAction } from "@/app/actions";
 import { Sidebar } from "@/components/Sidebar";
+import { Pulso } from "@/components/ui";
 import { sessaoAtual, podeEscrever } from "@/lib/session";
 import { rotularEnum } from "@/lib/utils";
 
@@ -9,18 +10,22 @@ export default async function PainelLayout({ children }: { children: React.React
   if (!sessao) redirect("/login");
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
-      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 bg-slate-900 lg:block">
+    <div className="flex min-h-screen">
+      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 border-r border-slate-200/60 bg-slate-50/70 backdrop-blur-xl lg:block">
         <Sidebar />
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-slate-200 bg-white/90 px-6 py-3 backdrop-blur">
+        <header className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-slate-200/60 bg-slate-50/70 px-6 py-3 backdrop-blur-xl">
           <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-slate-900">
-              Faculdade Brasileira de Negócios Inovadores — FABRANI
+            <p className="fonte-display truncate text-sm font-semibold text-slate-900">
+              Faculdade Brasileira de Negócios Inovadores{" "}
+              <span className="texto-neon">— FABRANI</span>
             </p>
-            <p className="text-xs text-slate-500">Código e-MEC 1751876 · EaD · Jaboticabal/SP</p>
+            <p className="flex items-center gap-1.5 text-xs text-slate-500">
+              <Pulso tom="ok" />
+              Código e-MEC 1751876 · EaD · Jaboticabal/SP
+            </p>
           </div>
           <div className="flex items-center gap-3">
             <div className="hidden text-right sm:block">
@@ -30,10 +35,13 @@ export default async function PainelLayout({ children }: { children: React.React
                 {podeEscrever(sessao) ? "" : " · somente leitura"}
               </p>
             </div>
+            <span className="grid size-9 place-items-center rounded-full bg-gradient-to-br from-cyan-400/25 to-violet-500/25 text-xs font-semibold text-slate-900 ring-1 ring-cyan-400/30">
+              {sessao.nome.slice(0, 2).toUpperCase()}
+            </span>
             <form action={sairAction}>
               <button
                 type="submit"
-                className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:border-rose-400/50 hover:text-slate-900"
               >
                 Sair
               </button>

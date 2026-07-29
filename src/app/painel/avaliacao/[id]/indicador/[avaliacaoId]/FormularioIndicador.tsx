@@ -41,8 +41,10 @@ export function FormularioIndicador({ avaliacao }: { avaliacao: AvaliacaoForm })
               disabled={nsa}
               onClick={() => setConceito(n)}
               aria-pressed={conceito === n}
-              className={`h-10 w-10 rounded-lg border text-sm font-semibold transition-colors disabled:opacity-40 ${
-                conceito === n ? "border-slate-900 bg-slate-900 text-white" : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
+              className={`h-10 w-10 rounded-xl border text-sm font-semibold transition-all disabled:opacity-40 ${
+                conceito === n
+                  ? "border-cyan-400/50 bg-gradient-to-br from-cyan-400 to-violet-500 text-slate-50 shadow-[0_0_18px_-4px_rgba(34,211,238,0.9)]"
+                  : "border-slate-300 bg-white/40 text-slate-700 hover:border-cyan-400/40 hover:text-slate-900"
               }`}
             >
               {n}
@@ -159,7 +161,7 @@ export function FormularioIndicador({ avaliacao }: { avaliacao: AvaliacaoForm })
       <button
         type="submit"
         disabled={pendente}
-        className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-60"
+        className="rounded-xl bg-gradient-to-r from-cyan-400 to-violet-500 text-slate-50 shadow-[0_0_20px_-6px_rgba(34,211,238,0.75)] transition-all hover:shadow-[0_0_28px_-4px_rgba(168,85,247,0.85)] active:scale-[0.99] px-4 py-2 text-sm font-medium disabled:opacity-60"
       >
         {pendente ? "Salvando…" : "Salvar avaliação"}
       </button>

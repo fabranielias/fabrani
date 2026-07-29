@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { AlertTriangle, ArrowUpRight, CalendarClock, FileWarning, Radar } from "lucide-react";
-import { Badge, Barra, Card, CardTitulo, Celula, Metrica, Tabela, TituloPagina, Vazio } from "@/components/ui";
+import { AlertTriangle, ArrowUpRight, CalendarClock, FileWarning, Radar, Sparkles } from "lucide-react";
+import { Anel, Badge, Barra, Card, CardTitulo, Celula, Metrica, Pulso, Tabela, TituloPagina, Vazio } from "@/components/ui";
+import { BarrasImpacto, DistribuicaoConceitos, LinhaPrazos, RadarEixos } from "@/components/Graficos";
 import { query, queryOne } from "@/lib/db";
-import { lacunas } from "@/lib/avaliacao";
+import { lacunas, resumoCiclo } from "@/lib/avaliacao";
 import { diasAte, formatarConceito, formatarData, rotularEnum } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -74,12 +75,98 @@ export default async function PainelPage() {
       join instrumento i on i.id = c.instrumento_id where c.status = 'ABERTO' order by c.ano_referencia desc`,
   );
 
+  const cicloDestaque = ciclos[0] ? await resumoCiclo(ciclos[0].id) : null;
+  const dadosRadar = (cicloDestaque?.eixos ?? []).map((e) => ({
+    eixo: `Eixo ${e.numero}`,
+    conceito: Number((e.media ?? 0).toFixed(2)),
+    meta: 5,
+  }));
+
+  const distribuicao = await query<{ conceito: string; quantidade: string }>(
+    `select ai.conceito_autoavaliado::text as conceito, count(*)::text as quantidade
+       from avaliacao_indicador ai join ciclo_avaliacao c on c.id = ai.ciclo_id
+      where c.status = 'ABERTO' and not ai.is_nsa and ai.conceito_autoavaliado is not null
+      group by 1 order by 1`,
+  );
+  const dadosDistribuicao = ["1", "2", "3", "4", "5"].map((conceito) => ({
+    conceito,
+    quantidade: Number(distribuicao.find((d) => d.conceito === conceito)?.quantidade ?? 0),
+  }));
+
+  const prazosPorMes = await query<{ mes: string; obrigacoes: string }>(
+    `select to_char(date_trunc('month', data_limite), 'MM/YY') as mes, count(*)::text as obrigacoes
+       from prazo
+      where status <> 'CONCLUIDO' and data_limite >= current_date - 30
+      group by date_trunc('month', data_limite) order by date_trunc('month', data_limite) limit 12`,
+  );
+  const dadosPrazos = prazosPorMes.map((p) => ({ mes: p.mes, obrigacoes: Number(p.obrigacoes) }));
+
+  const dadosImpacto = topLacunas.slice(0, 6).map((l) => ({
+    rotulo: l.codigo,
+    impacto: Number(l.impacto.toFixed(1)),
+  }));
+
+  const socrates = await queryOne<{ risco: string; atencao: string }>(
+    `select
+       count(*) filter (where severidade = 'RISCO')::text as risco,
+       count(*) filter (where severidade = 'ATENCAO')::text as atencao
+       from socrates_sugestao where status = 'ABERTA'`,
+  );
+
   return (
     <>
       <TituloPagina
         titulo="Painel executivo"
         descricao={`${ies?.nome ?? "IES não cadastrada"} — situação regulatória, conceitos, prazos e lacunas de indicadores em uma tela.`}
+        acao={
+          <Link
+            href="/painel/socrates"
+            className="group inline-flex items-center gap-2 rounded-xl border border-cyan-400/30 bg-gradient-to-r from-cyan-400/15 to-violet-500/10 px-4 py-2 text-sm font-medium text-slate-900 transition-all hover:shadow-[0_0_26px_-8px_rgba(34,211,238,0.9)]"
+          >
+            <Sparkles size={15} className="text-cyan-300" aria-hidden />
+            Sócrates
+            <span className="rounded-md bg-rose-500/15 px-1.5 py-0.5 text-[11px] text-rose-700 ring-1 ring-rose-500/30">
+              {socrates?.risco ?? 0} riscos
+            </span>
+          </Link>
+        }
       />
+
+      {cicloDestaque ? (
+        <Card destaque className="entrada mb-4 overflow-hidden">
+          <div className="flex flex-wrap items-center justify-between gap-6">
+            <div className="flex items-center gap-5">
+              <Anel
+                valor={cicloDestaque.conceitoSimulado}
+                rotulo="simulado"
+                tom={(cicloDestaque.faixa ?? 0) >= 4 ? "ok" : (cicloDestaque.faixa ?? 0) >= 3 ? "atencao" : "risco"}
+                tamanho={104}
+              />
+              <div>
+                <p className="flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-slate-500">
+                  <Pulso tom="info" /> ciclo em andamento
+                </p>
+                <p className="fonte-display mt-1 text-lg font-semibold text-slate-900">{cicloDestaque.ciclo.titulo}</p>
+                <p className="mt-1 text-xs text-slate-500">
+                  Cobertura da autoavaliação {cicloDestaque.cobertura.toFixed(0)}% · faixa projetada{" "}
+                  <span className="texto-neon font-semibold">{cicloDestaque.faixa ?? "—"}</span> · simulação interna, não
+                  é resultado do INEP
+                </p>
+                <div className="mt-3 w-64">
+                  <Barra valor={cicloDestaque.cobertura} tom="info" />
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Badge tom="risco" brilho>
+                {socrates?.risco ?? 0} riscos apontados
+              </Badge>
+              <Badge tom="atencao">{socrates?.atencao ?? 0} pontos de atenção</Badge>
+              <Badge tom="info">{contagens?.indicadores_sem_conceito ?? 0} indicadores sem conceito</Badge>
+            </div>
+          </div>
+        </Card>
+      ) : null}
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <Metrica
@@ -106,6 +193,27 @@ export default async function PainelPage() {
           detalhe="Fechar todos evita inativação no Censup"
           tom={Number(contagens?.censo_abertos ?? 0) > 0 ? "atencao" : "ok"}
         />
+      </div>
+
+      <div className="mt-4 grid gap-4 lg:grid-cols-3">
+        <Card>
+          <CardTitulo titulo="Conceito por eixo" descricao="Autoavaliação contra a meta 5 do instrumento." />
+          {dadosRadar.length === 0 ? (
+            <Vazio titulo="Sem ciclo aberto" />
+          ) : (
+            <RadarEixos dados={dadosRadar} />
+          )}
+        </Card>
+
+        <Card>
+          <CardTitulo titulo="Distribuição dos conceitos" descricao="Quantos indicadores em cada nível 1–5." />
+          <DistribuicaoConceitos dados={dadosDistribuicao} />
+        </Card>
+
+        <Card>
+          <CardTitulo titulo="Curva de obrigações" descricao="Prazos abertos por mês — antecipe os picos." />
+          {dadosPrazos.length === 0 ? <Vazio titulo="Nenhum prazo em aberto" /> : <LinhaPrazos dados={dadosPrazos} />}
+        </Card>
       </div>
 
       <div className="mt-4 grid gap-4 lg:grid-cols-3">
@@ -179,7 +287,9 @@ export default async function PainelPage() {
               descricao="Lance os conceitos da autoavaliação para que o sistema priorize o que falta para o 5."
             />
           ) : (
-            <ul className="space-y-2.5">
+            <>
+              <BarrasImpacto dados={dadosImpacto} />
+              <ul className="mt-3 space-y-2.5">
               {topLacunas.map((l) => (
                 <li key={l.avaliacao_id}>
                   <Link
@@ -198,7 +308,8 @@ export default async function PainelPage() {
                   </Link>
                 </li>
               ))}
-            </ul>
+              </ul>
+            </>
           )}
         </Card>
 

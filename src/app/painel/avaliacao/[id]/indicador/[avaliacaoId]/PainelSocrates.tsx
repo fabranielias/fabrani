@@ -61,7 +61,7 @@ export function PainelSocrates({ avaliacaoId }: { avaliacaoId: string }) {
               defaultValue={analise.planoSugerido}
               className="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs outline-none focus:border-slate-900"
             />
-            <button className="rounded-lg bg-slate-900 px-3.5 py-2 text-xs font-medium text-white hover:bg-slate-700">
+            <button className="rounded-xl bg-gradient-to-r from-cyan-400 to-violet-500 text-slate-50 shadow-[0_0_20px_-6px_rgba(34,211,238,0.75)] transition-all hover:shadow-[0_0_28px_-4px_rgba(168,85,247,0.85)] active:scale-[0.99] px-3.5 py-2 text-xs font-medium">
               Aceitar e gravar no indicador
             </button>
           </form>

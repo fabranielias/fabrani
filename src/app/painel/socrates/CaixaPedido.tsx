@@ -38,7 +38,7 @@ export function CaixaPedido({ habilitado }: { habilitado: boolean }) {
       <button
         type="submit"
         disabled={!habilitado || pendente}
-        className="rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-60"
+        className="rounded-xl bg-gradient-to-r from-cyan-400 to-violet-500 text-slate-50 shadow-[0_0_20px_-6px_rgba(34,211,238,0.75)] transition-all hover:shadow-[0_0_28px_-4px_rgba(168,85,247,0.85)] active:scale-[0.99] px-4 py-2.5 text-sm font-medium disabled:opacity-60"
       >
         {pendente ? "Montando o plano…" : "Montar plano"}
       </button>

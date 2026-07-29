@@ -128,7 +128,7 @@ export async function estadoAtual(acao: Acao): Promise<Record<string, unknown> |
     const entidade = entidadePorSlug(acao.entidade);
     if (!entidade) return null;
     const colunas = Object.keys(acao.dados).filter((c) =>
-      entidade.campos.some((campo) => campo.nome === c),
+      entidade.campos.some((campo) => campo.nome === c && campo.tipo !== "senha"),
     );
     if (colunas.length === 0) return null;
     return queryOne(`select ${colunas.join(", ")} from ${entidade.tabela} where id = $1`, [acao.id]);
@@ -167,7 +167,7 @@ async function aplicarPreencherEntidade(acao: z.infer<typeof preencherEntidade>)
   const valores: unknown[] = [];
   for (const [nome, valor] of Object.entries(acao.dados)) {
     const campo = entidade.campos.find((c) => c.nome === nome);
-    if (!campo) continue;
+    if (!campo || campo.tipo === "senha") continue;
     colunas.push(nome);
     valores.push(converterValor(campo, valor));
   }
@@ -310,6 +310,7 @@ export async function aplicarAcao(acao: Acao, sessao: Sessao): Promise<string | 
 export function catalogoEntidades(): string {
   return ENTIDADES.map((e) => {
     const campos = e.campos
+      .filter((c) => c.tipo !== "senha")
       .map((c) => (c.opcoes ? `${c.nome}(${c.tipo}: ${c.opcoes.join("|")})` : `${c.nome}(${c.tipo})`))
       .join(", ");
     return `- ${e.slug}: ${e.rotulo} — ${campos}`;

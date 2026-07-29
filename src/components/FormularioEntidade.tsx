@@ -63,6 +63,17 @@ function CampoInput({
             </option>
           ))}
         </select>
+      ) : campo.tipo === "senha" ? (
+        <input
+          id={id}
+          name={campo.nome}
+          type="password"
+          autoComplete="new-password"
+          minLength={8}
+          required={campo.obrigatorio && !registro?.id}
+          placeholder={registro?.id ? "deixe em branco para manter a atual" : "mínimo de 8 caracteres"}
+          className={INPUT}
+        />
       ) : (
         <input
           id={id}

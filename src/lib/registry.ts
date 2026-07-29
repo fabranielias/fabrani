@@ -16,7 +16,8 @@ export type TipoCampo =
   | "select"
   | "boolean"
   | "ref"
-  | "tags";
+  | "tags"
+  | "senha";
 
 export type Campo = {
   nome: string;
@@ -875,6 +876,14 @@ export const ENTIDADES: Entidade[] = [
         opcoes: ["SUPERADMIN", "DIRETOR", "PI", "RESPONSAVEL_LEGAL", "COORD_CURSO", "CPA", "NDE", "SECRETARIA", "DOCENTE", "AUDITOR"],
       },
       { nome: "ativo", rotulo: "Ativo", tipo: "boolean", naLista: true },
+      {
+        nome: "senha",
+        rotulo: "Senha de acesso",
+        tipo: "senha",
+        largura: "full",
+        ajuda:
+          "Defina a senha e informe-a ao usuário: o sistema não envia e-mail de convite. Ao editar, deixe em branco para manter a senha atual.",
+      },
     ],
   },
 ];

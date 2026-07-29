@@ -26,6 +26,7 @@ async function main() {
       erros.push(`${entidade.slug}: campoTitulo "${entidade.campoTitulo}" não existe em ${entidade.tabela}`);
     }
     for (const campo of entidade.campos) {
+      if (campo.tipo === "senha") continue;
       if (!cols.has(campo.nome)) {
         erros.push(`${entidade.slug}: coluna "${campo.nome}" não existe em ${entidade.tabela}`);
       }

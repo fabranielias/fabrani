@@ -1,12 +1,17 @@
+import bcrypt from "bcryptjs";
 import { query, queryOne } from "./db";
 import { entidadePorSlug, type Campo, type Entidade } from "./registry";
 import type { Sessao } from "./session";
 
 export type Registro = Record<string, unknown>;
 
+/** Campos de senha não existem como coluna: viram `senha_hash` na gravação. */
 function colunasSelecionadas(entidade: Entidade): string {
   const nomes = new Set<string>(["id"]);
-  for (const campo of entidade.campos) nomes.add(campo.nome);
+  for (const campo of entidade.campos) {
+    if (campo.tipo === "senha") continue;
+    nomes.add(campo.nome);
+  }
   return [...nomes].join(", ");
 }
 
@@ -75,6 +80,17 @@ export async function salvar(
   const colunas: string[] = [];
   const valores: unknown[] = [];
   for (const campo of entidade.campos) {
+    if (campo.tipo === "senha") {
+      const senha = String(form.get(campo.nome) ?? "").trim();
+      if (senha === "") {
+        if (!id) throw new Error("Defina a senha de acesso do usuário.");
+        continue;
+      }
+      if (senha.length < 8) throw new Error("A senha precisa ter ao menos 8 caracteres.");
+      colunas.push("senha_hash");
+      valores.push(await bcrypt.hash(senha, 10));
+      continue;
+    }
     if (!form.has(campo.nome) && campo.tipo !== "boolean") continue;
     colunas.push(campo.nome);
     valores.push(converter(campo, form.get(campo.nome)));
@@ -99,8 +115,13 @@ export async function salvar(
     registroId = linha!.id;
   }
 
-  await registrarAuditoria(sessao, id ? "ATUALIZAR" : "CRIAR", entidade.tabela, registroId,
-    Object.fromEntries(colunas.map((c, i) => [c, valores[i]])));
+  await registrarAuditoria(
+    sessao,
+    id ? "ATUALIZAR" : "CRIAR",
+    entidade.tabela,
+    registroId,
+    Object.fromEntries(colunas.map((c, i) => [c, c === "senha_hash" ? "(redefinida)" : valores[i]])),
+  );
 
   return registroId;
 }

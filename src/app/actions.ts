@@ -8,8 +8,8 @@ import { registrarAuditoria, salvar } from "@/lib/crud";
 import { query, queryOne } from "@/lib/db";
 
 export async function entrarAction(_estado: string | null, form: FormData): Promise<string | null> {
-  const email = String(form.get("email") ?? "");
-  const senha = String(form.get("senha") ?? "");
+  const email = String(form.get("email") ?? "").trim();
+  const senha = String(form.get("senha") ?? "").trim();
   if (!email || !senha) return "Informe e-mail e senha.";
 
   let sessao;

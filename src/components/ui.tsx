@@ -53,7 +53,7 @@ const TONS = {
   ok: "bg-emerald-500/10 text-emerald-700 ring-emerald-500/30",
   atencao: "bg-amber-400/10 text-amber-700 ring-amber-400/30",
   risco: "bg-rose-500/10 text-rose-700 ring-rose-500/35",
-  info: "bg-cyan-400/10 text-cyan-300 ring-cyan-400/30",
+  info: "bg-cyan-400/12 text-cyan-300 ring-cyan-400/35",
 } as const;
 
 const BRILHOS = {
@@ -103,7 +103,7 @@ export function Botao({
   const estilo = cn(
     "inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-[0.98]",
     variante === "primario" &&
-      "bg-gradient-to-r from-cyan-400 to-violet-500 text-slate-50 shadow-[0_0_20px_-6px_rgba(34,211,238,0.7)] hover:shadow-[0_0_28px_-4px_rgba(168,85,247,0.8)]",
+      "bg-gradient-to-r from-cyan-300 via-cyan-400 to-cyan-500 text-slate-50 shadow-[0_0_22px_-8px_rgba(var(--acento-rgb),0.9)] hover:shadow-[0_0_30px_-6px_rgba(var(--acento-rgb),0.95)]",
     variante === "secundario" &&
       "border border-slate-300 bg-white/40 text-slate-800 hover:border-cyan-400/50 hover:text-slate-900",
     variante === "sutil" && "text-slate-500 hover:bg-slate-100 hover:text-slate-900",
@@ -177,12 +177,12 @@ export function Barra({ valor, max = 100, tom = "info" }: { valor: number; max?:
   const pct = Math.max(0, Math.min(100, (valor / max) * 100));
   const cor =
     tom === "ok"
-      ? "from-emerald-400 to-teal-300 shadow-[0_0_12px_-2px_rgba(52,255,198,0.8)]"
+      ? "from-emerald-500 to-emerald-400 shadow-[0_0_12px_-2px_rgba(163,230,53,0.8)]"
       : tom === "risco"
-        ? "from-rose-500 to-fuchsia-400 shadow-[0_0_12px_-2px_rgba(255,111,145,0.8)]"
+        ? "from-rose-500 to-rose-400 shadow-[0_0_12px_-2px_rgba(244,112,58,0.8)]"
         : tom === "atencao"
-          ? "from-amber-400 to-orange-300 shadow-[0_0_12px_-2px_rgba(255,201,77,0.8)]"
-          : "from-cyan-400 to-violet-500 shadow-[0_0_12px_-2px_rgba(34,211,238,0.8)]";
+          ? "from-amber-400 to-amber-300 shadow-[0_0_12px_-2px_rgba(255,201,77,0.8)]"
+          : "from-cyan-500 to-cyan-300 shadow-[0_0_12px_-2px_rgba(var(--acento-rgb),0.8)]";
   return (
     <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-200/70">
       <div
@@ -209,7 +209,15 @@ export function Anel({
 }) {
   const pct = valor === null ? 0 : Math.max(0, Math.min(1, valor / max));
   const cor =
-    tom === "ok" ? "#34ffc6" : tom === "risco" ? "#ff6f91" : tom === "atencao" ? "#ffc94d" : "#22d3ee";
+    tom === "ok" ? "#a3e635" : tom === "risco" ? "#f4703a" : tom === "atencao" ? "#ffc94d" : "var(--acento)";
+  const sombra =
+    tom === "ok"
+      ? "rgba(163,230,53,0.6)"
+      : tom === "risco"
+        ? "rgba(244,112,58,0.6)"
+        : tom === "atencao"
+          ? "rgba(255,201,77,0.6)"
+          : "rgba(var(--acento-rgb),0.6)";
   const raio = 42;
   const circunferencia = 2 * Math.PI * raio;
   return (
@@ -226,7 +234,7 @@ export function Anel({
           strokeLinecap="round"
           strokeDasharray={circunferencia}
           strokeDashoffset={circunferencia * (1 - pct)}
-          style={{ filter: `drop-shadow(0 0 6px ${cor}aa)` }}
+          style={{ filter: `drop-shadow(0 0 6px ${sombra})` }}
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -274,10 +282,13 @@ export function TituloPagina({
   acao?: ReactNode;
 }) {
   return (
-    <header className="entrada mb-6 flex flex-wrap items-start justify-between gap-4">
+    <header className="entrada relative mb-7 flex flex-wrap items-start justify-between gap-4 pl-4">
+      <span className="absolute inset-y-1 left-0 w-[3px] rounded-full bg-gradient-to-b from-cyan-300 to-cyan-500 shadow-[0_0_14px_rgba(var(--acento-rgb),0.75)]" />
       <div className="max-w-3xl">
-        <h1 className="fonte-display text-2xl font-semibold text-slate-900">{titulo}</h1>
-        {descricao ? <p className="mt-1.5 text-sm leading-relaxed text-slate-500">{descricao}</p> : null}
+        <h1 className="fonte-display text-[28px] font-semibold leading-[1.15] tracking-[-0.03em] text-slate-900">
+          {titulo}
+        </h1>
+        {descricao ? <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-500">{descricao}</p> : null}
       </div>
       {acao}
     </header>

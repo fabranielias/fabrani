@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { sairAction } from "@/app/actions";
+import { Area } from "@/components/Area";
 import { Sidebar } from "@/components/Sidebar";
 import { Pulso } from "@/components/ui";
 import { sessaoAtual, podeEscrever } from "@/lib/session";
@@ -10,13 +11,14 @@ export default async function PainelLayout({ children }: { children: React.React
   if (!sessao) redirect("/login");
 
   return (
-    <div className="flex min-h-screen">
-      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 border-r border-slate-200/60 bg-slate-50/70 backdrop-blur-xl lg:block">
+    <Area className="flex min-h-screen">
+      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 border-r border-slate-200/60 bg-slate-50/80 backdrop-blur-xl lg:block">
         <Sidebar />
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-slate-200/60 bg-slate-50/70 px-6 py-3 backdrop-blur-xl">
+        <header className="relative sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-slate-200/60 bg-slate-50/75 px-6 py-3 backdrop-blur-xl">
+          <span className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-cyan-400/45 to-transparent" />
           <div className="min-w-0">
             <p className="fonte-display truncate text-sm font-semibold text-slate-900">
               Faculdade Brasileira de Negócios Inovadores{" "}
@@ -51,6 +53,6 @@ export default async function PainelLayout({ children }: { children: React.React
 
         <main className="min-w-0 flex-1 px-6 py-6">{children}</main>
       </div>
-    </div>
+    </Area>
   );
 }

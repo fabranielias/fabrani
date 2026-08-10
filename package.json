@@ -15,6 +15,7 @@
     "socrates:regras": "tsx scripts/socrates-regras.ts"
   },
   "dependencies": {
+    "@supabase/storage-js": "2.109.0",
     "@supabase/supabase-js": "^2.109.0",
     "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",

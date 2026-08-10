@@ -4,7 +4,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { autenticar, criarSessao, encerrarSessao, podeEscrever, sessaoAtual } from "@/lib/session";
 import { entidadePorSlug } from "@/lib/registry";
-import { registrarAuditoria, salvar } from "@/lib/crud";
+import { excluir, registrarAuditoria, salvar, traduzirErro } from "@/lib/crud";
+import { alvoDaEntidade, vincular } from "@/lib/acervo";
 import { query, queryOne } from "@/lib/db";
 
 export async function entrarAction(_estado: string | null, form: FormData): Promise<string | null> {
@@ -44,14 +45,62 @@ export async function salvarRegistroAction(_estado: string | null, form: FormDat
   const entidade = entidadePorSlug(slug);
   if (!entidade) return "Entidade desconhecida.";
 
+  if (entidade.papeisEscrita && !entidade.papeisEscrita.includes(sessao.papel)) {
+    return `Seu papel não pode alterar ${entidade.rotulo.toLowerCase()}.`;
+  }
+
   let novoId: string;
   try {
     novoId = await salvar(entidade, id, form, sessao);
   } catch (erro) {
-    return erro instanceof Error ? erro.message : "Falha ao salvar.";
+    // Erros de validação vêm como Error com mensagem própria; o resto vem do Postgres.
+    if (erro instanceof Error && !("code" in erro)) return erro.message;
+    return traduzirErro(erro);
   }
+
   revalidatePath(`/painel/dados/${slug}`);
+  if (String(form.get("__continuar") ?? "") === "1") {
+    redirect(`/painel/dados/${slug}/novo?salvo=1`);
+  }
   redirect(`/painel/dados/${slug}/${novoId}?salvo=1`);
+}
+
+export async function excluirRegistroAction(_estado: string | null, form: FormData): Promise<string | null> {
+  const sessao = await sessaoAtual();
+  if (!sessao) redirect("/login");
+  if (sessao.papel !== "SUPERADMIN") return "Somente o superadministrador pode excluir registros.";
+
+  const slug = String(form.get("__entidade") ?? "");
+  const id = String(form.get("__id") ?? "");
+  const entidade = entidadePorSlug(slug);
+  if (!entidade || !id) return "Registro inválido.";
+
+  const esperado = String(form.get("__titulo") ?? "").trim();
+  if (String(form.get("confirmacao") ?? "").trim() !== esperado) {
+    return `Digite exatamente “${esperado}” para confirmar a exclusão.`;
+  }
+
+  try {
+    await excluir(entidade, id, sessao);
+  } catch (erro) {
+    if (erro instanceof Error && !("code" in erro)) return erro.message;
+    return traduzirErro(erro);
+  }
+
+  revalidatePath(`/painel/dados/${slug}`);
+  redirect(`/painel/dados/${slug}?excluido=1`);
+}
+
+export async function vincularAnexoAction(form: FormData) {
+  const sessao = await exigirEscrita();
+  const slug = String(form.get("__entidade") ?? "");
+  const id = String(form.get("__id") ?? "");
+  const documentoId = String(form.get("documento_id") ?? "");
+  const alvo = alvoDaEntidade(slug);
+  if (!alvo || !id || !documentoId) return;
+
+  await vincular(documentoId, alvo, id, sessao);
+  revalidatePath(`/painel/dados/${slug}/${id}`);
 }
 
 export async function salvarIndicadorAction(_estado: string | null, form: FormData): Promise<string | null> {
@@ -111,9 +160,11 @@ export async function vincularEvidenciaAction(form: FormData) {
   if (!avaliacaoIndicadorId || !documentoId) return;
 
   await query(
-    `insert into evidencia_vinculo (documento_id, avaliacao_indicador_id, requisito_evidencia_id)
-     values ($1,$2,$3)`,
-    [documentoId, avaliacaoIndicadorId, requisito],
+    `insert into evidencia_vinculo
+       (documento_id, avaliacao_indicador_id, requisito_evidencia_id, alvo_tipo, alvo_id, criado_por)
+     values ($1,$2,$3,'AVALIACAO_INDICADOR',$2,$4)
+     on conflict do nothing`,
+    [documentoId, avaliacaoIndicadorId, requisito, sessao.email],
   );
   await registrarAuditoria(sessao, "VINCULAR_EVIDENCIA", "evidencia_vinculo", avaliacaoIndicadorId, {
     documentoId,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import Link from "next/link";
 import { salvarRegistroAction } from "@/app/actions";
 import type { Campo, Entidade } from "@/lib/registry";
@@ -103,12 +103,14 @@ export function FormularioEntidade({
   somenteLeitura?: boolean;
 }) {
   const [erro, acao, pendente] = useActionState(salvarRegistroAction, null);
+  const [continuar, setContinuar] = useState("");
   const id = registro?.id ? String(registro.id) : "";
 
   return (
     <form action={acao} className="space-y-5">
       <input type="hidden" name="__entidade" value={entidade.slug} />
       <input type="hidden" name="__id" value={id} />
+      <input type="hidden" name="__continuar" value={continuar} />
 
       <fieldset disabled={somenteLeitura || pendente} className="grid gap-4 sm:grid-cols-2">
         {entidade.campos.map((campo) => (
@@ -130,6 +132,16 @@ export function FormularioEntidade({
         >
           {pendente ? "Salvando…" : id ? "Salvar alterações" : `Criar ${entidade.rotuloSingular.toLowerCase()}`}
         </button>
+        {!id ? (
+          <button
+            type="submit"
+            disabled={somenteLeitura || pendente}
+            onClick={() => setContinuar("1")}
+            className="rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 disabled:opacity-60"
+          >
+            Salvar e criar outro
+          </button>
+        ) : null}
         <Link
           href={`/painel/dados/${entidade.slug}`}
           className="rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"

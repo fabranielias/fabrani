@@ -29,6 +29,8 @@ export type Campo = {
   obrigatorio?: boolean;
   naLista?: boolean;
   largura?: "full" | "half";
+  /** Vira filtro na listagem (select para `select`/`boolean`, faixa para `date`). */
+  filtravel?: boolean;
 };
 
 export type Entidade = {
@@ -41,6 +43,10 @@ export type Entidade = {
   campoTitulo: string;
   ordenacao?: string;
   campos: Campo[];
+  /** Papéis com permissão de escrita; ausente = qualquer papel que não seja de leitura. */
+  papeisEscrita?: string[];
+  /** Bloqueia a exclusão mesmo para o superadministrador (catálogos regulatórios). */
+  permiteExcluir?: boolean;
 };
 
 const SIM_NAO = ["true", "false"];

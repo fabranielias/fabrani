@@ -41,8 +41,10 @@ export default async function SocratesPage() {
     `select id, alvo_tipo, severidade, titulo, mensagem, to_char(criado_em, 'DD/MM') as criado_em
        from socrates_sugestao
       where status = 'ABERTA' and origem in ('REGRA','RADAR')
-      order by case severidade when 'RISCO' then 0 when 'ATENCAO' then 1 else 2 end, criado_em desc
-      limit 40`,
+      order by case severidade when 'RISCO' then 0 when 'ATENCAO' then 1 else 2 end,
+               case when alvo_tipo = 'TRILHA' then 0 else 1 end,
+               criado_em desc
+      limit 60`,
   );
   const contagem = await query<{ severidade: string; n: string }>(
     `select severidade, count(*)::text as n from socrates_sugestao

@@ -34,7 +34,7 @@ export async function salvarPassoAction(_estado: string | null, form: FormData):
   const sessao = await exigirEscrita();
   const codigo = String(form.get("__codigo") ?? "");
   const acao = String(form.get("__acao") ?? "salvar");
-  const observacao = String(form.get("observacao") ?? "").trim() || null;
+  const observacao = String(form.get("__observacao") ?? "").trim() || null;
 
   const passo = await obterPasso(codigo);
   if (!passo) return "Passo não encontrado.";

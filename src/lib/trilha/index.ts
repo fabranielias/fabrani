@@ -316,6 +316,7 @@ const SELECT_PASSO = `
         from evidencia_vinculo v
         join documento d on d.id = v.documento_id and d.excluido_em is null
        where v.alvo_tipo = p.alvo_tipo and v.alvo_id = p.alvo_id
+         and (p.categoria_documento is null or d.categoria = p.categoria_documento)
     ) dc on p.alvo_id is not null
    where p.ativo`;
 

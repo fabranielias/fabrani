@@ -111,7 +111,11 @@ export type DocumentoVinculado = {
   observacao: string | null;
 };
 
-export async function documentosDoAlvo(tipo: AlvoTipo, id: string): Promise<DocumentoVinculado[]> {
+export async function documentosDoAlvo(
+  tipo: AlvoTipo,
+  id: string,
+  categoria?: string,
+): Promise<DocumentoVinculado[]> {
   return query<DocumentoVinculado>(
     `select v.id as vinculo_id, d.id as documento_id,
             coalesce(d.nome_exibicao, d.titulo) as nome_exibicao, d.titulo, d.categoria, d.status,
@@ -120,8 +124,9 @@ export async function documentosDoAlvo(tipo: AlvoTipo, id: string): Promise<Docu
        from evidencia_vinculo v
        join documento d on d.id = v.documento_id
       where v.alvo_tipo = $1 and v.alvo_id = $2 and d.excluido_em is null
+        and ($3::text is null or d.categoria = $3)
       order by d.criado_em desc`,
-    [tipo, id],
+    [tipo, id, categoria ?? null],
   );
 }
 

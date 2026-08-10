@@ -109,12 +109,12 @@ export function FormularioPasso({
       ) : null}
 
       <div>
-        <label htmlFor="observacao" className="block text-xs font-medium text-slate-700">
+        <label htmlFor="__observacao" className="block text-xs font-medium text-slate-700">
           Observação {confirmandoNaoHa ? "(por que não há este documento?)" : "(opcional)"}
         </label>
         <textarea
-          id="observacao"
-          name="observacao"
+          id="__observacao"
+          name="__observacao"
           rows={2}
           defaultValue={observacaoAtual ?? ""}
           placeholder={

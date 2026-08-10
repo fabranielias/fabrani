@@ -101,7 +101,7 @@ export default async function PassoPage({ params }: { params: Promise<{ codigo: 
 
   const documentos =
     passo.alvo_tipo && passo.alvo_id && alvoValido(passo.alvo_tipo)
-      ? await documentosDoAlvo(passo.alvo_tipo, passo.alvo_id)
+      ? await documentosDoAlvo(passo.alvo_tipo, passo.alvo_id, passo.categoria_documento ?? undefined)
       : [];
 
   const evidenciasEsperadas =

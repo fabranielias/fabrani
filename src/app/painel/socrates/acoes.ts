@@ -32,6 +32,7 @@ export async function sincronizarRegrasAction() {
   await exigirEscrita();
   await sincronizarSugestoes();
   revalidatePath("/painel/socrates");
+  redirect("/painel/socrates");
 }
 
 export async function perguntarAction(

@@ -11,6 +11,7 @@ import {
   Gauge,
   GraduationCap,
   LayoutDashboard,
+  ListChecks,
   Scale,
   Settings,
   Sparkles,
@@ -22,6 +23,7 @@ import { cn } from "@/lib/utils";
 
 const ICONES: Record<string, LucideIcon> = {
   LayoutDashboard,
+  ListChecks,
   Gauge,
   Building2,
   Scale,

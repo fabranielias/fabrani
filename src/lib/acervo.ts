@@ -22,6 +22,9 @@ export const ALVOS = {
   CENSO_ANO: { rotulo: "Censo", tabela: "censo_ano", titulo: "ano_base::text" },
   ENADE_CICLO: { rotulo: "Ciclo do ENADE", tabela: "enade_ciclo", titulo: "titulo" },
   IES: { rotulo: "IES", tabela: "ies", titulo: "nome" },
+  MANTENEDORA: { rotulo: "Mantenedora", tabela: "mantenedora", titulo: "nome" },
+  INDICADOR: { rotulo: "Indicador do instrumento", tabela: "indicador", titulo: "titulo" },
+  TRILHA_PASSO: { rotulo: "Passo da trilha", tabela: "trilha_passo", titulo: "titulo" },
   SUGESTAO: { rotulo: "Apontamento do Sócrates", tabela: "socrates_sugestao", titulo: "titulo" },
 } as const;
 
@@ -45,6 +48,7 @@ const ALVO_POR_ENTIDADE: Record<string, AlvoTipo> = {
   "censo-ano": "CENSO_ANO",
   "enade-ciclo": "ENADE_CICLO",
   ies: "IES",
+  mantenedora: "MANTENEDORA",
 };
 
 export function alvoDaEntidade(slug: string): AlvoTipo | null {

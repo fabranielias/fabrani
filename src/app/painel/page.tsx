@@ -2,6 +2,7 @@ import Link from "next/link";
 import { AlertTriangle, ArrowUpRight, CalendarClock, FileWarning, Radar, Sparkles } from "lucide-react";
 import { Anel, Badge, Barra, Card, CardTitulo, Celula, Metrica, Pulso, Tabela, TituloPagina, Vazio } from "@/components/ui";
 import { BarrasImpacto, DistribuicaoConceitos, LinhaPrazos, RadarEixos } from "@/components/Graficos";
+import { AvisoTrilha } from "@/components/AvisoTrilha";
 import { query, queryOne } from "@/lib/db";
 import { lacunas, resumoCiclo } from "@/lib/avaliacao";
 import { diasAte, formatarConceito, formatarData, rotularEnum } from "@/lib/utils";
@@ -115,6 +116,7 @@ export default async function PainelPage() {
 
   return (
     <>
+      <AvisoTrilha />
       <TituloPagina
         titulo="Painel executivo"
         descricao={`${ies?.nome ?? "IES não cadastrada"} — situação regulatória, conceitos, prazos e lacunas de indicadores em uma tela.`}

@@ -325,6 +325,53 @@ const enadeEstudanteIrregular: Consulta = async () => {
   ];
 };
 
+const dossieItemInexistente: Consulta = async () => {
+  const linhas = await query<{ codigo: string; titulo: string; base_legal: string | null; observacao: string | null }>(
+    `select p.codigo, p.titulo, p.base_legal, r.observacao
+       from trilha_passo p
+       join trilha_resposta r on r.passo_id = p.id
+      where p.ativo and p.obrigatorio and r.status = 'NAO_HA'
+      order by p.ordem`,
+  );
+  return linhas.map((l) => ({
+    alvoTipo: "TRILHA",
+    alvoId: null,
+    regra: `dossie_sem_documento:${l.codigo}`,
+    severidade: "RISCO" as const,
+    titulo: `Dossiê: a instituição declarou não possuir “${l.titulo}”`,
+    mensagem: `${l.base_legal ? `${l.base_legal}. ` : ""}Item exigido no dossiê regulatório e ainda sem documento no acervo.${
+      l.observacao ? ` Observação da secretaria: ${l.observacao}` : ""
+    }`,
+    href: `/painel/trilha/${l.codigo}`,
+  }));
+};
+
+const dossieNaoVisitado: Consulta = async () => {
+  const linhas = await query<{ n: string; proximo: string | null }>(
+    `select count(*)::text as n,
+            (select p2.codigo from trilha_passo p2
+               left join trilha_resposta r2 on r2.passo_id = p2.id
+              where p2.ativo and r2.id is null order by p2.ordem limit 1) as proximo
+       from trilha_passo p
+       left join trilha_resposta r on r.passo_id = p.id
+      where p.ativo and r.id is null`,
+  );
+  const n = Number(linhas[0]?.n ?? 0);
+  if (n === 0) return [];
+  return [
+    {
+      alvoTipo: "TRILHA",
+      alvoId: null,
+      regra: "dossie_incompleto",
+      severidade: "ATENCAO" as const,
+      titulo: `${n} item(ns) do dossiê ainda não preenchidos`,
+      mensagem:
+        "A trilha guiada percorre a IES e os cursos na ordem do instrumento. Cada item respondido vira evidência consultável pelo Sócrates.",
+      href: linhas[0]?.proximo ? `/painel/trilha/${linhas[0].proximo}` : "/painel/trilha",
+    },
+  ];
+};
+
 const REGRAS: Consulta[] = [
   conceitoSemEvidencia,
   analiseInsuficiente,
@@ -340,6 +387,8 @@ const REGRAS: Consulta[] = [
   poloSemAdequacao,
   supervisaoSemResposta,
   enadeEstudanteIrregular,
+  dossieItemInexistente,
+  dossieNaoVisitado,
 ];
 
 const ORDEM_SEVERIDADE: Record<Severidade, number> = { RISCO: 0, ATENCAO: 1, INFO: 2 };

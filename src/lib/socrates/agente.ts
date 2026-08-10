@@ -10,6 +10,7 @@ import { query, queryOne } from "../db";
 import type { Sessao } from "../session";
 import { registrarAuditoria } from "../crud";
 import { baseLegalDoIndicador, buscarDispositivos, citar, type Dispositivo } from "./corpus";
+import { blocoDossie, buscarNoDossie } from "./dossie";
 import { conversar, extrairJson, hashConteudo, MODELO_PROFUNDO, MODELO_RAPIDO } from "./llm";
 import {
   acaoSchema,
@@ -47,7 +48,7 @@ export async function perguntar(
   pergunta: string,
   sessao: Sessao,
 ): Promise<{ resposta: string; fontes: Fonte[]; tokens: number }> {
-  const dispositivos = await buscarDispositivos(pergunta, 6);
+  const [dispositivos, achados] = await Promise.all([buscarDispositivos(pergunta, 6), buscarNoDossie(pergunta)]);
   const { texto, tokens } = await conversar({
     sistema: PAPEL,
     modelo: MODELO_RAPIDO,
@@ -56,6 +57,9 @@ export async function perguntar(
 
 Dispositivos disponíveis no corpus:
 ${blocoNormativo(dispositivos)}
+
+Dossiê da FABRANI (acervo e trilha guiada):
+${blocoDossie(achados)}
 
 Responda de forma objetiva citando os dispositivos entre colchetes. Se o corpus não cobrir a pergunta, diga isso explicitamente antes de responder pelo conhecimento geral, marcando essa parte como "sem base carregada".`,
   });

@@ -8,6 +8,14 @@ export const MENU: GrupoMenu[] = [
     itens: [{ rotulo: "Visão executiva", href: "/painel" }],
   },
   {
+    rotulo: "Dossiê guiado",
+    icone: "ListChecks",
+    itens: [
+      { rotulo: "Trilha de preenchimento", href: "/painel/trilha" },
+      { rotulo: "Relatório de pendências", href: "/painel/trilha/checklist" },
+    ],
+  },
+  {
     rotulo: "Sócrates",
     icone: "Sparkles",
     itens: [{ rotulo: "Agente regulatório", href: "/painel/socrates" }],

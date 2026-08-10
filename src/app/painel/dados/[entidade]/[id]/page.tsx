@@ -7,7 +7,7 @@ import { FormularioEntidade } from "@/components/FormularioEntidade";
 import { alvoDaEntidade, documentosDoAlvo } from "@/lib/acervo";
 import { carregarOpcoesRef, dependencias, historico, obter } from "@/lib/crud";
 import { entidadePorSlug } from "@/lib/registry";
-import { podeEscrever, sessaoAtual } from "@/lib/session";
+import { podeEscrever, podeVer, sessaoAtual } from "@/lib/session";
 import { storageConfigurado } from "@/lib/storage";
 import { formatarData, rotularEnum } from "@/lib/utils";
 import { ExcluirRegistro } from "./ExcluirRegistro";
@@ -26,13 +26,16 @@ export default async function EditarRegistroPage({
   const entidade = entidadePorSlug(slug);
   if (!entidade) notFound();
 
+  const sessaoLeitura = await sessaoAtual();
+  if (!podeVer(entidade.papeisLeitura, sessaoLeitura?.papel)) notFound();
+
   const registro = await obter(entidade, id);
   if (!registro) notFound();
 
   const alvo = alvoDaEntidade(slug);
   const [opcoes, sessao, eventos, presos, anexos] = await Promise.all([
     carregarOpcoesRef(entidade),
-    sessaoAtual(),
+    Promise.resolve(sessaoLeitura),
     historico(entidade.tabela, id),
     dependencias(entidade, id),
     alvo ? documentosDoAlvo(alvo, id) : Promise.resolve([]),

@@ -13,7 +13,7 @@ export default async function PainelLayout({ children }: { children: React.React
   return (
     <Area className="flex min-h-screen">
       <aside className="sticky top-0 hidden h-screen w-64 shrink-0 border-r border-slate-200/60 bg-slate-50/80 backdrop-blur-xl lg:block">
-        <Sidebar />
+        <Sidebar papel={sessao.papel} />
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">

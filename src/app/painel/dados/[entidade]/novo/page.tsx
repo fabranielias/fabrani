@@ -3,7 +3,7 @@ import { Card, TituloPagina } from "@/components/ui";
 import { FormularioEntidade } from "@/components/FormularioEntidade";
 import { carregarOpcoesRef } from "@/lib/crud";
 import { entidadePorSlug } from "@/lib/registry";
-import { podeEscrever, sessaoAtual } from "@/lib/session";
+import { podeEscrever, podeVer, sessaoAtual } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +13,7 @@ export default async function NovoRegistroPage({ params }: { params: Promise<{ e
   if (!entidade) notFound();
 
   const [opcoes, sessao] = await Promise.all([carregarOpcoesRef(entidade), sessaoAtual()]);
+  if (!podeVer(entidade.papeisLeitura, sessao?.papel)) notFound();
 
   return (
     <>

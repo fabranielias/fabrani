@@ -162,6 +162,9 @@ function converterValor(campo: Campo, valor: string | number | boolean | null): 
 async function aplicarPreencherEntidade(acao: z.infer<typeof preencherEntidade>): Promise<string> {
   const entidade = entidadePorSlug(acao.entidade);
   if (!entidade) throw new Error(`Entidade desconhecida: ${acao.entidade}`);
+  if (entidade.papeisLeitura) {
+    throw new Error(`"${entidade.rotulo}" é de acesso restrito e não pode ser preenchida pelo agente.`);
+  }
 
   const colunas: string[] = [];
   const valores: unknown[] = [];
@@ -308,7 +311,7 @@ export async function aplicarAcao(acao: Acao, sessao: Sessao): Promise<string | 
 
 /** Catálogo de entidades e campos entregue ao modelo no prompt de planejamento. */
 export function catalogoEntidades(): string {
-  return ENTIDADES.map((e) => {
+  return ENTIDADES.filter((e) => !e.papeisLeitura).map((e) => {
     const campos = e.campos
       .filter((c) => c.tipo !== "senha")
       .map((c) => (c.opcoes ? `${c.nome}(${c.tipo}: ${c.opcoes.join("|")})` : `${c.nome}(${c.tipo})`))

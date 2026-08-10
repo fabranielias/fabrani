@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { listarParaExportar, type Filtro } from "@/lib/crud";
 import { entidadePorSlug } from "@/lib/registry";
-import { sessaoAtual } from "@/lib/session";
+import { podeVer, sessaoAtual } from "@/lib/session";
 
 function celula(valor: unknown): string {
   if (valor === null || valor === undefined) return "";
@@ -20,6 +20,9 @@ export async function GET(request: Request, { params }: { params: Promise<{ enti
   const { entidade: slug } = await params;
   const entidade = entidadePorSlug(slug);
   if (!entidade) return NextResponse.json({ erro: "Entidade desconhecida." }, { status: 404 });
+  if (!podeVer(entidade.papeisLeitura, sessao.papel)) {
+    return NextResponse.json({ erro: "Sem permissão para esta entidade." }, { status: 403 });
+  }
 
   const url = new URL(request.url);
   const filtros: Filtro[] = [];

@@ -4,6 +4,7 @@ import { ArrowDown, ArrowUp, Download, Plus, Search } from "lucide-react";
 import { Badge, Botao, Card, Celula, TituloPagina, Vazio } from "@/components/ui";
 import { carregarOpcoesRef, listarPagina, TAMANHO_PAGINA, type Filtro } from "@/lib/crud";
 import { entidadePorSlug, type Campo, type Entidade } from "@/lib/registry";
+import { podeVer, sessaoAtual } from "@/lib/session";
 import { formatarData, rotularEnum } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -57,6 +58,9 @@ export default async function ListaEntidadePage({
   const consulta = await searchParams;
   const entidade = entidadePorSlug(slug);
   if (!entidade) notFound();
+
+  const sessao = await sessaoAtual();
+  if (!podeVer(entidade.papeisLeitura, sessao?.papel)) notFound();
 
   const filtraveis = camposFiltraveis(entidade);
   const filtros: Filtro[] = filtraveis

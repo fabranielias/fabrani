@@ -37,8 +37,12 @@ const ICONES: Record<string, LucideIcon> = {
   Sparkles,
 };
 
-export function Sidebar() {
+export function Sidebar({ papel }: { papel?: string }) {
   const pathname = usePathname();
+  const grupos = MENU.map((grupo) => ({
+    ...grupo,
+    itens: grupo.itens.filter((item) => !item.papeis || (papel && item.papeis.includes(papel))),
+  })).filter((grupo) => grupo.itens.length > 0);
 
   return (
     <nav aria-label="Menu principal" className="flex h-full flex-col gap-5 overflow-y-auto px-3 py-5">
@@ -52,7 +56,7 @@ export function Sidebar() {
         </div>
       </div>
 
-      {MENU.map((grupo) => {
+      {grupos.map((grupo) => {
         const Icone = ICONES[grupo.icone] ?? LayoutDashboard;
         const grupoAtivo = grupo.itens.some(
           (item) => pathname === item.href || pathname.startsWith(`${item.href}/`),

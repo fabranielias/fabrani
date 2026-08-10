@@ -1,4 +1,5 @@
-export type ItemMenu = { rotulo: string; href: string };
+/** `papeis` ausente = visível a todos; presente = só aos papéis listados. */
+export type ItemMenu = { rotulo: string; href: string; papeis?: string[] };
 /** `area` dá a cor de acento da seção — ver `[data-area]` em globals.css. */
 export type GrupoMenu = { rotulo: string; icone: string; area: Area; itens: ItemMenu[] };
 
@@ -140,7 +141,7 @@ export const MENU: GrupoMenu[] = [
     area: "admin",
     itens: [
       { rotulo: "Indicadores de qualidade", href: "/painel/dados/indicador-qualidade" },
-      { rotulo: "Usuários", href: "/painel/dados/usuario" },
+      { rotulo: "Usuários", href: "/painel/dados/usuario", papeis: ["SUPERADMIN"] },
       { rotulo: "Auditoria", href: "/painel/auditoria" },
     ],
   },

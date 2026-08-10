@@ -82,3 +82,8 @@ const PAPEIS_LEITURA = new Set(["AUDITOR", "DOCENTE"]);
 export function podeEscrever(sessao: Sessao | null): boolean {
   return !!sessao && !PAPEIS_LEITURA.has(sessao.papel);
 }
+
+/** Entidades com `papeisLeitura` só abrem para os papéis listados. */
+export function podeVer(papeisLeitura: string[] | undefined, papel: string | undefined): boolean {
+  return !papeisLeitura || (!!papel && papeisLeitura.includes(papel));
+}

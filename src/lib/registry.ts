@@ -45,6 +45,8 @@ export type Entidade = {
   campos: Campo[];
   /** Papéis com permissão de escrita; ausente = qualquer papel que não seja de leitura. */
   papeisEscrita?: string[];
+  /** Papéis que podem abrir a entidade; ausente = todos. Também filtra o menu. */
+  papeisLeitura?: string[];
   /** Bloqueia a exclusão mesmo para o superadministrador (catálogos regulatórios). */
   permiteExcluir?: boolean;
 };
@@ -870,6 +872,8 @@ export const ENTIDADES: Entidade[] = [
     grupo: "Administração",
     descricao: "Acesso ao sistema por papel. Papéis AUDITOR e DOCENTE têm acesso somente de leitura.",
     campoTitulo: "nome",
+    papeisLeitura: ["SUPERADMIN"],
+    papeisEscrita: ["SUPERADMIN"],
     campos: [
       { nome: "nome", rotulo: "Nome", tipo: "text", obrigatorio: true, naLista: true },
       { nome: "email", rotulo: "E-mail", tipo: "text", obrigatorio: true, naLista: true },

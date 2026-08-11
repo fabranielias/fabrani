@@ -1,55 +1,82 @@
 import { query, queryOne } from "./db";
 import { registrarAuditoria } from "./crud";
+import { entidadePorSlug } from "./registry";
 import type { Sessao } from "./session";
 
+type Alvo = { rotulo: string; tabela: string; titulo: string };
+
 /**
- * Alvos possíveis de um vínculo de evidência. Cada documento pode comprovar
- * um indicador, um requisito legal, um curso, um polo, um ato — o que existir
- * no acervo regulatório.
+ * Alvos sem entidade equivalente no CRUD: ciclo de avaliação, catálogo do
+ * instrumento, trilha guiada e apontamentos do agente.
  */
-export const ALVOS = {
+const ALVOS_SEM_ENTIDADE = {
   AVALIACAO_INDICADOR: { rotulo: "Indicador do ciclo", tabela: "avaliacao_indicador", titulo: "id::text" },
   REQUISITO_LEGAL: { rotulo: "Requisito legal", tabela: "requisito_legal", titulo: "titulo" },
-  CURSO: { rotulo: "Curso", tabela: "curso", titulo: "nome" },
-  POLO: { rotulo: "Polo", tabela: "polo", titulo: "nome" },
-  ATO: { rotulo: "Ato regulatório", tabela: "ato_regulatorio", titulo: "titulo" },
-  PROCESSO: { rotulo: "Processo e-MEC", tabela: "processo_regulatorio", titulo: "titulo" },
-  PRAZO: { rotulo: "Prazo", tabela: "prazo", titulo: "titulo" },
-  REUNIAO: { rotulo: "Reunião", tabela: "reuniao", titulo: "pauta" },
-  PESSOA: { rotulo: "Pessoa", tabela: "pessoa", titulo: "nome" },
-  COLEGIADO: { rotulo: "Colegiado", tabela: "colegiado", titulo: "nome" },
-  CPA_CICLO: { rotulo: "Ciclo da CPA", tabela: "cpa_ciclo", titulo: "titulo" },
-  CENSO_ANO: { rotulo: "Censo", tabela: "censo_ano", titulo: "ano_base::text" },
-  ENADE_CICLO: { rotulo: "Ciclo do ENADE", tabela: "enade_ciclo", titulo: "titulo" },
-  IES: { rotulo: "IES", tabela: "ies", titulo: "nome" },
-  MANTENEDORA: { rotulo: "Mantenedora", tabela: "mantenedora", titulo: "nome" },
   INDICADOR: { rotulo: "Indicador do instrumento", tabela: "indicador", titulo: "titulo" },
   TRILHA_PASSO: { rotulo: "Passo da trilha", tabela: "trilha_passo", titulo: "titulo" },
   SUGESTAO: { rotulo: "Apontamento do Sócrates", tabela: "socrates_sugestao", titulo: "titulo" },
 } as const;
 
-export type AlvoTipo = keyof typeof ALVOS;
+/**
+ * Entidades do CRUD que aceitam anexo, com o alvo de evidência correspondente.
+ * Tabela e coluna de título vêm do registry, para o acervo não divergir do
+ * cadastro.
+ */
+const ALVO_ENTIDADE = {
+  MANTENEDORA: "mantenedora",
+  IES: "ies",
+  CURSO: "curso",
+  POLO: "polo",
+  ATO: "ato",
+  PROCESSO: "processo",
+  VISITA: "visita",
+  PRAZO: "prazo",
+  SUPERVISAO: "supervisao",
+  CPA_CICLO: "cpa-ciclo",
+  CPA_RESULTADO: "cpa-resultado",
+  COLEGIADO: "colegiado",
+  MEMBRO: "membro",
+  REUNIAO: "reuniao",
+  PESSOA: "pessoa",
+  ENADE_CICLO: "enade-ciclo",
+  ENADE_CURSO: "enade-curso",
+  ENADE_ESTUDANTE: "enade-estudante",
+  CENSO_ANO: "censo-ano",
+  CENSO_MODULO: "censo-modulo",
+  CENSO_PENDENCIA: "censo-pendencia",
+  NORMA: "norma",
+  INDICADOR_QUALIDADE: "indicador-qualidade",
+} as const;
+
+type AlvoDeEntidade = keyof typeof ALVO_ENTIDADE;
+
+export type AlvoTipo = keyof typeof ALVOS_SEM_ENTIDADE | AlvoDeEntidade;
+
+function alvoDoRegistry(slug: string): Alvo {
+  const entidade = entidadePorSlug(slug);
+  if (!entidade) throw new Error(`Entidade desconhecida no mapa de alvos: ${slug}`);
+  return {
+    rotulo: entidade.rotuloSingular,
+    tabela: entidade.tabela,
+    titulo: `${entidade.campoTitulo}::text`,
+  };
+}
+
+export const ALVOS: Record<AlvoTipo, Alvo> = {
+  ...ALVOS_SEM_ENTIDADE,
+  ...(Object.fromEntries(
+    Object.entries(ALVO_ENTIDADE).map(([tipo, slug]) => [tipo, alvoDoRegistry(slug)]),
+  ) as Record<AlvoDeEntidade, Alvo>),
+};
 
 export function alvoValido(tipo: string): tipo is AlvoTipo {
   return tipo in ALVOS;
 }
 
 /** Mapa entidade do registry → alvo de evidência, para a aba Anexos do CRUD. */
-const ALVO_POR_ENTIDADE: Record<string, AlvoTipo> = {
-  curso: "CURSO",
-  polo: "POLO",
-  ato: "ATO",
-  processo: "PROCESSO",
-  prazo: "PRAZO",
-  reuniao: "REUNIAO",
-  pessoa: "PESSOA",
-  colegiado: "COLEGIADO",
-  "cpa-ciclo": "CPA_CICLO",
-  "censo-ano": "CENSO_ANO",
-  "enade-ciclo": "ENADE_CICLO",
-  ies: "IES",
-  mantenedora: "MANTENEDORA",
-};
+const ALVO_POR_ENTIDADE: Record<string, AlvoTipo> = Object.fromEntries(
+  Object.entries(ALVO_ENTIDADE).map(([tipo, slug]) => [slug, tipo as AlvoTipo]),
+);
 
 export function alvoDaEntidade(slug: string): AlvoTipo | null {
   return ALVO_POR_ENTIDADE[slug] ?? null;
@@ -66,18 +93,10 @@ export async function rotuloDoAlvo(tipo: AlvoTipo, id: string): Promise<string> 
 
 export type OpcaoAlvo = { id: string; rotulo: string };
 
-/** Alvos oferecidos na tela de vínculo, já com rótulo legível. */
+/** Alvos oferecidos na tela de vínculo: todo cadastro do CRUD, mais requisito legal. */
 const TIPOS_SELECIONAVEIS: AlvoTipo[] = [
-  "CURSO",
-  "POLO",
-  "ATO",
-  "PROCESSO",
-  "PRAZO",
-  "REUNIAO",
-  "PESSOA",
-  "COLEGIADO",
+  ...(Object.keys(ALVO_ENTIDADE) as AlvoDeEntidade[]),
   "REQUISITO_LEGAL",
-  "IES",
 ];
 
 export async function opcoesDeAlvo(): Promise<{ tipo: AlvoTipo; rotulo: string; opcoes: OpcaoAlvo[] }[]> {
@@ -86,7 +105,8 @@ export async function opcoesDeAlvo(): Promise<{ tipo: AlvoTipo; rotulo: string; 
     const alvo = ALVOS[tipo];
     try {
       const opcoes = await query<OpcaoAlvo>(
-        `select id, ${alvo.titulo} as rotulo from ${alvo.tabela} order by 2 limit 200`,
+        `select id, left(coalesce(${alvo.titulo}, ''), 120) as rotulo
+           from ${alvo.tabela} order by 2 limit 200`,
       );
       if (opcoes.length > 0) resultado.push({ tipo, rotulo: alvo.rotulo, opcoes });
     } catch {

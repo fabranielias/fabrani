@@ -217,7 +217,8 @@ export function EnvioArquivos({
           </button>
         </p>
         <p className="mt-1 text-[11px] text-slate-500">
-          PDF, Word, Excel, PowerPoint, CSV, imagens e ZIP — até 50 MB por arquivo.
+          Qualquer tipo de arquivo (PDF, Office, imagens, vídeo, ZIP…) — até 50 MB cada. Executáveis e
+          scripts não são aceitos.
         </p>
         <input
           ref={inputRef}

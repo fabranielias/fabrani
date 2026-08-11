@@ -22,7 +22,10 @@ export async function POST(request: Request) {
   const nomeArquivo = String(corpo.nomeArquivo ?? "").trim();
   if (!nomeArquivo) return NextResponse.json({ erro: "Informe o nome do arquivo." }, { status: 400 });
   if (!extensaoAceita(nomeArquivo)) {
-    return NextResponse.json({ erro: `Tipo de arquivo não aceito: ${nomeArquivo}` }, { status: 400 });
+    return NextResponse.json(
+      { erro: `Executáveis e scripts não são aceitos no acervo: ${nomeArquivo}` },
+      { status: 400 },
+    );
   }
   const tamanho = Number(corpo.tamanho ?? 0);
   if (tamanho > MAX_BYTES) {

@@ -5,21 +5,37 @@ const BUCKET = process.env.SUPABASE_STORAGE_BUCKET ?? "evidencias";
 /** Tamanho máximo por arquivo aceito pelo bucket. */
 export const MAX_BYTES = 50 * 1024 * 1024;
 
-export const EXTENSOES_ACEITAS = [
-  "pdf",
-  "doc",
-  "docx",
-  "xls",
-  "xlsx",
-  "ppt",
-  "pptx",
-  "csv",
-  "txt",
-  "png",
-  "jpg",
-  "jpeg",
-  "webp",
-  "zip",
+/**
+ * O acervo aceita qualquer tipo de arquivo; só recusa executável e script, que
+ * não são evidência regulatória e viram vetor de contaminação no download.
+ */
+export const EXTENSOES_BLOQUEADAS = [
+  "exe",
+  "msi",
+  "bat",
+  "cmd",
+  "com",
+  "scr",
+  "pif",
+  "cpl",
+  "dll",
+  "sys",
+  "vbs",
+  "vbe",
+  "js",
+  "jse",
+  "wsf",
+  "wsh",
+  "hta",
+  "ps1",
+  "psm1",
+  "jar",
+  "apk",
+  "app",
+  "sh",
+  "bash",
+  "reg",
+  "lnk",
 ] as const;
 
 export function storageConfigurado(): boolean {
@@ -66,7 +82,7 @@ export function extensaoDe(nome: string): string {
 
 export function extensaoAceita(nome: string): boolean {
   const ext = extensaoDe(nome);
-  return (EXTENSOES_ACEITAS as readonly string[]).includes(ext);
+  return !(EXTENSOES_BLOQUEADAS as readonly string[]).includes(ext);
 }
 
 export function montarCaminho(nomeArquivo: string, categoria: string | null, uuid: string): string {

@@ -1,0 +1,1 @@
+file://C:/Users/Administrator/repos/fabrani/.agents/skills/testing-fabrani-e2e/SKILL.md

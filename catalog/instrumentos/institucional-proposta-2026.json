@@ -1,0 +1,76 @@
+{
+  "codigo": "INSTITUCIONAL-PROPOSTA-2026",
+  "tipo": "INSTITUCIONAL",
+  "titulo": "Instrumento de Avaliação Institucional Externa — proposta em consolidação (consulta pública 16 a 28/06/2026)",
+  "versao": "PROPOSTA-2026",
+  "atos": ["CREDENCIAMENTO", "RECREDENCIAMENTO"],
+  "norma_origem": "INEP/DAES — consulta pública Brasil Participativo, 16 a 28/06/2026 (não publicado como instrumento definitivo)",
+  "vigencia_inicio": null,
+  "situacao": "PROPOSTA",
+  "escala": { "min": 1, "max": 5, "satisfatorio": 3 },
+  "observacao": "Estrutura de eixos conforme a proposta submetida à consulta pública. Indicadores ainda não publicados: carregados como pauta de preparação, para a IES organizar evidências antes da vigência.",
+  "eixos": [
+    {
+      "numero": 1,
+      "titulo": "Planejamento e Avaliação Institucional",
+      "peso": 20,
+      "dimensoes_sinaes": [8],
+      "indicadores": [
+        { "codigo": "1.1", "titulo": "Cultura de planejamento e integração PDI ↔ avaliação ↔ gestão", "evidencias": ["pdi-vigente", "relatorio-cpa"] },
+        { "codigo": "1.2", "titulo": "Autoavaliação institucional e uso dos resultados na tomada de decisão", "evidencias": ["relatorio-cpa"] },
+        { "codigo": "1.3", "titulo": "Transparência e divulgação de resultados à comunidade", "evidencias": ["evidencia-divulgacao"] }
+      ]
+    },
+    {
+      "numero": 2,
+      "titulo": "Responsabilidade Social: compromisso com os Objetivos de Desenvolvimento Sustentável (ODS)",
+      "peso": 20,
+      "dimensoes_sinaes": [3],
+      "indicadores": [
+        { "codigo": "2.1", "titulo": "Política institucional de responsabilidade social vinculada aos ODS", "evidencias": ["politica-responsabilidade-social-ods"] },
+        { "codigo": "2.2", "titulo": "Inclusão, diversidade e equidade nas políticas acadêmicas", "evidencias": ["politica-inclusao"] },
+        { "codigo": "2.3", "titulo": "Sustentabilidade ambiental e educação ambiental", "evidencias": ["politica-ambiental"] },
+        { "codigo": "2.4", "titulo": "Impacto social e desenvolvimento regional", "evidencias": ["relatorio-responsabilidade-social"] }
+      ]
+    },
+    {
+      "numero": 3,
+      "titulo": "Desenvolvimento Institucional e Políticas Acadêmicas",
+      "peso": 20,
+      "dimensoes_sinaes": [1, 2, 4, 9],
+      "indicadores": [
+        { "codigo": "3.1", "titulo": "Missão, identidade institucional e coerência com a oferta", "evidencias": ["pdi-vigente"] },
+        { "codigo": "3.2", "titulo": "Políticas de ensino, extensão e (quando aplicável) pesquisa", "evidencias": ["pdi-vigente", "relatorio-extensao"] },
+        { "codigo": "3.3", "titulo": "Apoio ao discente, permanência e êxito", "evidencias": ["politica-apoio-discente"] },
+        { "codigo": "3.4", "titulo": "Acompanhamento de egressos e relação com o mundo do trabalho", "evidencias": ["pesquisa-egressos"] },
+        { "codigo": "3.5", "titulo": "Comunicação institucional interna e externa", "evidencias": ["plano-comunicacao"] }
+      ]
+    },
+    {
+      "numero": 4,
+      "titulo": "Políticas de Gestão",
+      "peso": 20,
+      "dimensoes_sinaes": [5, 6, 10],
+      "indicadores": [
+        { "codigo": "4.1", "titulo": "Gestão de pessoas: titulação, capacitação e valorização", "evidencias": ["plano-capacitacao", "planilha-titulacao"] },
+        { "codigo": "4.2", "titulo": "Governança, integridade e processos decisórios", "evidencias": ["regimento", "atas-consup"] },
+        { "codigo": "4.3", "titulo": "Sustentabilidade financeira e capacidade de investimento", "evidencias": ["demonstracoes-financeiras"] },
+        { "codigo": "4.4", "titulo": "Gestão da informação, dados e proteção de dados pessoais", "evidencias": ["politica-lgpd"] }
+      ]
+    },
+    {
+      "numero": 5,
+      "titulo": "Infraestrutura",
+      "peso": 20,
+      "dimensoes_sinaes": [7],
+      "indicadores": [
+        { "codigo": "5.1", "titulo": "Infraestrutura física da sede e dos polos EaD", "critico_ead": true, "evidencias": ["dossie-polo", "planta-baixa"] },
+        { "codigo": "5.2", "titulo": "Transformação digital: plataformas, AVA e recursos tecnológicos", "critico_ead": true, "evidencias": ["manual-ava", "relatorio-tic"] },
+        { "codigo": "5.3", "titulo": "Acervo e recursos de informação", "evidencias": ["relatorio-acervo"] },
+        { "codigo": "5.4", "titulo": "Acessibilidade física, digital, metodológica e comunicacional", "evidencias": ["laudo-acessibilidade"] },
+        { "codigo": "5.5", "titulo": "Segurança da informação e continuidade de serviços", "evidencias": ["plano-contingencia-ti"] }
+      ]
+    }
+  ],
+  "requisitos_legais": []
+}

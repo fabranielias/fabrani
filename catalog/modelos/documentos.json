@@ -1,0 +1,54 @@
+{
+  "observacao": "Modelos internos da FABRANI usados pelo Sócrates. O corpo é Markdown com marcadores {{campo}}; o agente preenche com dados reais do banco e redige apenas as partes discursivas.",
+  "modelos": [
+    {
+      "tipo": "ATA_CPA",
+      "titulo": "Ata de reunião da CPA",
+      "base_legal": "Lei nº 10.861/2004, art. 11",
+      "campos": ["data", "hora", "local", "participantes", "pauta", "deliberacoes"],
+      "corpo": "# ATA DE REUNIÃO DA COMISSÃO PRÓPRIA DE AVALIAÇÃO\n\n**{{ies}}** — código e-MEC {{codigo_emec}}\n\nAos {{data}}, às {{hora}}, em {{local}}, reuniu-se a Comissão Própria de Avaliação da {{ies}}, sob a presidência de {{presidente}}, com a presença dos membros abaixo relacionados.\n\n## 1. Composição presente\n{{participantes}}\n\n## 2. Pauta\n{{pauta}}\n\n## 3. Discussão\n{{discussao}}\n\n## 4. Deliberações\n{{deliberacoes}}\n\n## 5. Encerramento\nNada mais havendo a tratar, foi lavrada a presente ata, que segue assinada pelos presentes.\n\n_{{municipio}}, {{data}}._\n"
+    },
+    {
+      "tipo": "ATA_NDE",
+      "titulo": "Ata de reunião do NDE",
+      "base_legal": "Resolução CONAES nº 1/2010",
+      "campos": ["curso", "data", "participantes", "pauta", "deliberacoes"],
+      "corpo": "# ATA DE REUNIÃO DO NÚCLEO DOCENTE ESTRUTURANTE\n\n**Curso:** {{curso}}\n**{{ies}}** — código e-MEC {{codigo_emec}}\n\nAos {{data}}, reuniu-se o Núcleo Docente Estruturante do curso de {{curso}}, com a composição vigente abaixo.\n\n## 1. Composição presente\n{{participantes}}\n\n## 2. Pauta\n{{pauta}}\n\n## 3. Análise do NDE\n{{discussao}}\n\n## 4. Deliberações\n{{deliberacoes}}\n\n## 5. Encaminhamentos\n{{encaminhamentos}}\n\n_{{municipio}}, {{data}}._\n"
+    },
+    {
+      "tipo": "ATA_EQUIPE_MULTI",
+      "titulo": "Ata da Equipe Multidisciplinar EaD",
+      "base_legal": "Instrumento de avaliação institucional — indicador de equipe multidisciplinar; Portaria MEC nº 506/2025",
+      "campos": ["data", "participantes", "pauta", "deliberacoes"],
+      "corpo": "# ATA DE REUNIÃO DA EQUIPE MULTIDISCIPLINAR\n\n**{{ies}}** — código e-MEC {{codigo_emec}}\n\nAos {{data}}, reuniu-se a Equipe Multidisciplinar responsável pela concepção, produção e disseminação de tecnologias, recursos e materiais didáticos da modalidade a distância.\n\n## 1. Composição presente\n{{participantes}}\n\n## 2. Pauta\n{{pauta}}\n\n## 3. Produção e revisão de materiais\n{{discussao}}\n\n## 4. Deliberações\n{{deliberacoes}}\n\n_{{municipio}}, {{data}}._\n"
+    },
+    {
+      "tipo": "OFICIO",
+      "titulo": "Ofício institucional",
+      "base_legal": "Manual de Redação da Presidência da República (padrão ofício)",
+      "campos": ["numero", "destinatario", "assunto", "corpo"],
+      "corpo": "**OFÍCIO Nº {{numero}}/{{ano}} — {{sigla}}**\n\n{{municipio}}, {{data}}.\n\nAo Senhor(a) {{destinatario}}\n{{orgao_destinatario}}\n\n**Assunto:** {{assunto}}\n\n{{corpo}}\n\nRespeitosamente,\n\n{{signatario}}\n{{cargo}}\n{{ies}} — código e-MEC {{codigo_emec}}\n"
+    },
+    {
+      "tipo": "ATO_INTERNO",
+      "titulo": "Ato/Portaria interna da Direção",
+      "base_legal": "Regimento interno da IES",
+      "campos": ["numero", "ementa", "considerandos", "artigos"],
+      "corpo": "# PORTARIA Nº {{numero}}/{{ano}}\n\n**Ementa:** {{ementa}}\n\nO(A) Diretor(a) da {{ies}}, no uso das atribuições que lhe confere o Regimento Interno,\n\n{{considerandos}}\n\n**RESOLVE:**\n\n{{artigos}}\n\nEsta Portaria entra em vigor na data de sua publicação.\n\n_{{municipio}}, {{data}}._\n\n{{signatario}}\n{{cargo}}\n"
+    },
+    {
+      "tipo": "RESPOSTA_DILIGENCIA",
+      "titulo": "Resposta a diligência / despacho saneador",
+      "base_legal": "Portaria Normativa MEC nº 23/2017",
+      "campos": ["processo", "orgao", "itens"],
+      "corpo": "# RESPOSTA À DILIGÊNCIA — PROCESSO e-MEC Nº {{processo}}\n\n**Interessada:** {{ies}} — código e-MEC {{codigo_emec}}\n**Órgão:** {{orgao}}\n\nA {{ies}}, em atenção ao despacho exarado nos autos do processo em epígrafe, apresenta os esclarecimentos e os documentos a seguir, item a item.\n\n{{itens}}\n\n## Conclusão\n{{conclusao}}\n\n_{{municipio}}, {{data}}._\n\n{{signatario}}\n{{cargo}}\n"
+    },
+    {
+      "tipo": "RELATORIO_CPA",
+      "titulo": "Relatório de autoavaliação institucional",
+      "base_legal": "Lei nº 10.861/2004; Nota Técnica INEP/DAES/CONAES nº 65",
+      "campos": ["ano", "eixos", "resultados", "acoes"],
+      "corpo": "# RELATÓRIO DE AUTOAVALIAÇÃO INSTITUCIONAL — {{ano}}\n\n**{{ies}}** — código e-MEC {{codigo_emec}}\n\n## 1. Introdução\n{{introducao}}\n\n## 2. Metodologia\n{{metodologia}}\n\n## 3. Desenvolvimento por eixo\n{{eixos}}\n\n## 4. Análise dos dados e das informações\n{{resultados}}\n\n## 5. Ações com base na análise\n{{acoes}}\n\n## 6. Considerações finais\n{{consideracoes}}\n"
+    }
+  ]
+}
